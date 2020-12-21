@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Produto from '../views/Produto.vue'
-import Carrinho from '../views/Carrinho.vue'
+// import Carrinho from '../views/Carrinho.vue'
 
 const routes = [
   {
@@ -15,11 +15,24 @@ const routes = [
     component: Produto,
     props: true
   },
-  {
-    path: '/Carrinho',
-    name: 'Carrinho',
-    component: Carrinho
-  },
+  // {
+  //   path: '/produto',
+  //   name: 'produto',
+  //   component: Produto,
+  //   props: true,
+  //   children: [
+  //     {
+  //       path: ":id",
+  //       component: Produto,
+
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/Carrinho',
+  //   name: 'Carrinho',
+  //   component: Carrinho
+  // },
 ]
 
 const router = createRouter({

@@ -1,14 +1,7 @@
 <template>
-    <header>
-        <nav>
-            <router-link to="/" class="logo">
-                <img src="@/assets/techno.svg" alt="TechnoProject">
-                
-            </router-link>
-            <router-link to="/Carrinho" class="carrinho_menu">
-                <div class="carrinho_menu" @click="carrinhoAtivo = true">{{carrinhoTotal}} | {{carrinho.length}}</div>
-            </router-link>
-        </nav>
+    <header class="header">
+        <img class="logo" src="@/assets/techno.svg" alt="TechnoProject">
+        <div class="carrinho_menu" @click="$store.state.carrinhoAtivo = true">{{carrinhoTotal}} | {{$store.state.carrinho.length}}</div>
     </header>
 </template>
 
@@ -18,22 +11,23 @@ export default {
     
     data() {
         return{
-            carrinho: [],
-            carrinhoAtivo: false,   
+            //carrinhoAtivo: false,   
         }
         
     },
     computed: {
         carrinhoTotal() {
             let total = 0;
-            if (this.carrinho.length) {
-                this.carrinho.forEach(item => {
-                    total += item.preco;
+            if (this.$store.state.carrinho.length) {
+                this.$store.state.carrinho.forEach(item => {
+                    total += item.preco; 
+                    this.$store.state.totalCarrinho = total;
+    
                 })
             }
             return total;
         }
-    },
+    }
 }
 </script>
 
@@ -65,5 +59,6 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
-}
+} 
+
 </style>

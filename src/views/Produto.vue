@@ -1,22 +1,22 @@
 <template>
-    <section class="modal" v-if="produto" @click="fecharModal">
+    <section class="modal" v-if="$store.state.produto" @click="fecharModal">
         <div class="modal_container">
             <div class="modal_img">
-                <img :src="produto.img" :alt="produto.nome">
+                <img :src="$store.state.produto.img" :alt="$store.state.produto.nome">
             </div>
             <div class="modal_dados">
-                <button v-if="produto" @click="semProduto" class="modal_fechar">X</button>
-                <span class="nodal_preco">{{produto.preco}}</span>
-                <h2 class="modal_titulo">{{produto.nome}}</h2>
-                <p>{{produto.descricao}}</p>
-                <button v-if="produto.estoque > 0" class="modal_btn" 
+                <button v-if="$store.state.produto" @click="semProduto" class="modal_fechar">X</button>
+                <span class="nodal_preco">{{$store.state.produto.preco}}</span>
+                <h2 class="modal_titulo">{{$store.state.produto.nome}}</h2>
+                <p>{{$store.state.produto.descricao}}</p>
+                <button v-if="$store.state.produto.estoque > 0" class="modal_btn" 
                     @click="adicionarItem">Adicionar Item</button>
                 <button v-else class="modal_btn esgotado" disabled>Produto Esgotado</button>
             </div>
             <div class="avaliacoes">
                 <h2 class="avaliacoes_subtitulo">Avaliações</h2>
                 <ul>
-                    <li v-for="(avaliacao, index) in produto.reviews" class="avaliacao" :key="index">
+                    <li v-for="(avaliacao, index) in $store.state.produto.reviews" class="avaliacao" :key="index">
                         <p class="avaliacao_descricao">{{avaliacao.descricao}}</p>
                         <p class="avaliacao_usuario">{{avaliacao.nome}} | {{avaliacao.estrelas}} estrelas</p>
                     </li>
@@ -35,14 +35,14 @@ export default {
     props: ["id"],
     data() {
         return {
-            produto: [],
+            //produto: [],
         }
     },
     methods: {
         fetchProduto() {
             api.get(`/produtos/${this.id}`)
                 .then(r => {
-                    this.produto = r.data;
+                    this.$store.state.produto = r.data;
                 })
             /*this.produto = dados
             console.log(this.produto, id)
@@ -53,7 +53,7 @@ export default {
         },
         fecharModal({ target, currentTarget }) {
             if (target === currentTarget) {
-                this.produto = false
+                this.$store.state.produto = false
                 this.$router.push({ name: "Home" });
             }
                 
@@ -61,8 +61,21 @@ export default {
         },
         semProduto(){
            this.$router.push({ name: "Home" });
-        }
-        
+        },
+        adicionarItem() {
+            this.$store.state.produto.estoque--;
+            console.log(this.$store.state.produto.estoque--)
+            const { id, nome, preco } = this.$store.state.produto;
+            this.$store.state.carrinho.push({ id, nome, preco });
+            this.alerta(`${nome} adicionado ao carrinho.`);
+        },
+         alerta(mensagem) {
+            this.$store.state.mensagemAlerta = mensagem;
+            this.$store.state.alertaAtivo = true;
+            setTimeout(() => {
+                this.$store.state.alertaAtivo = false;
+            }, 1500);
+        },
     },
     created() {
     this.fetchProduto();

@@ -1,17 +1,17 @@
 <template>
-     <section class="carrinho_modal" :class="{ativo: carrinhoAtivo}" @click="clickForaCarrinho">
+     <section class="carrinho_modal" :class="{ativo: $store.state.carrinhoAtivo}" @click="clickForaCarrinho">
         <div class="carrinho_container">
-            <button class="carrinho_fechar" @click="sairCarrinho">X</button>
+            <button class="carrinho_fechar" @click="$store.state.carrinhoAtivo = false">X</button>
             <h2 class="carrinho_titulo">Carrinho</h2>
             <div>
                 <ul class="carrinho_lista">
-                    <li v-for="(item, index) in carrinho" class="carrinho_item" :key="index">
+                    <li v-for="(item, index) in $store.state.carrinho" class="carrinho_item" :key="index">
                         <p>{{item.nome}}</p>
                         <p class="carrinho_preco">{{item.preco }}</p>
                         <button class="carrinho_remover" @click="removerItem(index)">X</button>
                     </li>
                 </ul>
-                <p class="carrinho_total">{{carrinhoTotal }}</p>
+                <p class="carrinho_total">{{carrinhoTotal}}</p>
                 <button class="carrinho_finalizar">Finalizar Compra</button>
             </div>
         </div>
@@ -26,54 +26,53 @@ export default {
     props: ["id"],
     data() {
         return {
-            carrinho: [],
-            carrinhoAtivo: false,
+            //carrinhoAtivo: false,
+        }
+    },
+    computed: {
+        carrinhoTotal() {
+            let total = 0;
+            if (this.$store.state.carrinho.length) {
+                this.$store.state.carrinho.forEach(item => {
+                    total += item.preco; 
+                    this.$store.state.totalCarrinho = total;
+    
+                })
+            }
+            return total;
         }
     },
     methods: {
-        sairCarrinho(){
-            this.$router.push({ name: "Home" })
-        },
         clickForaCarrinho({ target, currentTarget }) {
-            if (target === currentTarget) this.carrinhoAtivo = false
+            if (target === currentTarget) this.$store.state.carrinhoAtivo = false
         },
-        adicionarItem() {
-            this.produto.estoque--;
-            const { id, nome, preco } = this.produto;
-            this.carrinho.push({ id, nome, preco });
-            this.alerta(`${nome} adicionado ao carrinho.`);
-        },
+        
         removerItem(index) {
-            this.carrinho.splice(index, 1);
+            this.$store.state.carrinho.splice(index, 1);
         },
         checarLocalStorage() {
             if (window.localStorage.carrinho)
-                this.carrinho = JSON.parse(window.localStorage.carrinho);
+                this.$store.state.carrinho = JSON.parse(window.localStorage.carrinho);
         },
         compararEstoque() {
-            const items = this.carrinho.filter(({ id }) => id === this.produto.id);
-            this.produto.estoque -= items.length;
+            const items = this.$store.state.carrinho.filter(({ id }) => id === this.$store.state.produto.id);
+            this.$store.state.produto.estoque -= items.length;
         },
-        alerta(mensagem) {
-            this.mensagemAlerta = mensagem;
-            this.alertaAtivo = true;
-            setTimeout(() => {
-                this.alertaAtivo = false;
-            }, 1500);
-        },
+       
+       
     },
 
     watch: {
         produto() {
-            document.title = this.produto.nome || "Techno";
-            const hash = this.produto.id || "";
+            document.title = this.$store.state.produto.nome || "Techno";
+            const hash = this.$store.state.produto.id || "";
             history.pushState(null, null, `#${hash}`);
-            if (this.produto) {
+            if (this.$store.state.produto) {
                 this.compararEstoque();
             }
         },
         carrinho() {
-            window.localStorage.carrinho = JSON.stringify(this.carrinho);
+            window.localStorage.carrinho = JSON.stringify(this.$store.state.carrinho);
         }
     },
     created() {
@@ -93,10 +92,11 @@ export default {
     left: 0px;
     width: 100%;
     height: 100vh;
+    background: rgba(0, 0, 0, .5);
     
 }
 
-/*.carrinho_modal{
+ .carrinho_modal{
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -173,6 +173,6 @@ export default {
     padding: 10px 25px;
     border: none;
     font-family: "Noto Serif";
-}*/
+}
 
 </style>

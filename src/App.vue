@@ -1,19 +1,72 @@
+
 <template>
-  <div id="app">
-    <TheHeader/>
-    <router-view/>
-  </div>
+  <body> 
+    <div id="app">
+      <TheHeader/>
+      <!-- <Home/> -->
+      <!-- <Carrinho v-if="true"/> -->
+      <router-view/>
+      <ProdutosLista/>
+      
+    </div>
+  </body>
 </template>
 
 <script>
 import TheHeader from "@/components/TheHeader.vue"
+import ProdutosLista from "@/components/ProdutosLista.vue"
+// import Carrinho from "@/views/Carrinho.vue";
+
+
+// import Home from "@/views/Home.vue"
+
 
 export default {
   components: {
-    TheHeader
+    TheHeader,
+    ProdutosLista,
+    // Carrinho
+    // Home
   }
 }
 </script>
 
 <style>
+body,
+h1,
+h2,
+ul,
+li,
+p {
+  padding: 0px;
+  margin: 0px;
+}
+
+ul {
+  list-style: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(to right, #1a1a1a 30%, #ffffff 30%);
+  font-family: "Noto Serif";
+}
+
+#app {
+  padding: 0 80px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(50px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0px, 0, 0);
+  }
+}
 </style>

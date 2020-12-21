@@ -1,11 +1,13 @@
 <template>
     <section class="produtos">
-        <div v-for="item in produtos" @click="abrirModal(item.id)" :key="item.id" class="produto">
-            <router-link :to="{name: 'produto', params: {id: item.id}}">
-            <img :src="item.img" :alt="item.nome" class="produto_img"/>
-            <div class="produto_info">
-                <span class="produto_preco">{{item.preco}}</span>
-                <h2 class="produto_titulo">{{item.nome}}</h2>
+        <div v-for="item in produtos" @click="abrirModal(item.id)" :key="item.id" >
+            <router-link :to="{name: 'produto', params: {id: item.id}}" custom v-slot="{ navigate }">
+            <div role="link" @click="navigate" class="produto">
+                <img :src="image" :alt="item.nome" class="produto_img"/>
+                <div class="produto_info">
+                    <span class="produto_preco">{{item.preco}}</span>
+                    <h2 class="produto_titulo">{{item.nome}}</h2>
+                </div>
             </div>
             </router-link>
         </div>
@@ -14,12 +16,14 @@
 
 <script>
 import { api } from "@/services.js";
-//import dados from './../../produtos.json'
+import image from "@/api/produtos/notebook/notebook.jpg"
 export default {
     data() {
         return {
+            image: image,
             produtos: [],
-            baseURL: "http://localhost:3000/"
+            baseURL: "http://localhost:3000/",
+            
         }
     },
     methods: {
