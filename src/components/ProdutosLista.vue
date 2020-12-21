@@ -35,7 +35,6 @@ export default {
                 })
         },
         abrirModal(id) {
-            console.log('porra', id)
             this.fetchProduto(id);
             window.scrollTo({
                 top: 0,
