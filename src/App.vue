@@ -13,8 +13,25 @@
 <script>
 import TheHeader from "@/components/TheHeader.vue"
 import ProdutosLista from "@/components/ProdutosLista.vue"
+import { mapState } from "vuex";
+
 
 export default {
+  created(){
+    document.title = "Techno"
+    this.checarLocalStorage();
+    //window.localStorage.carrinho = JSON.stringify(this.$store.state.carrinho); 
+  },
+  methods: {
+    checarLocalStorage() {
+            if (window.localStorage.carrinho){
+                this.$store.state.carrinho = JSON.parse(window.localStorage.carrinho);
+            }
+        }
+  },
+  computed: {
+    ...mapState(["produto", "carrinho", "totalCarrinho", "carrinhoAtivo"]),
+  },
   components: {
     TheHeader,
     ProdutosLista,

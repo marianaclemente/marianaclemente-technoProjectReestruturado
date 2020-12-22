@@ -1,24 +1,23 @@
 <template>
-    
-    <section class="modal" v-if="$store.state.produto" @click="fecharModal">
+    <section class="modal" v-if="produto" @click="fecharModal">
         <!-- <Alerta v-if= "$store.state.alertaAtivo" /> -->
         <div class="modal_container">
             <div class="modal_img">
-                <img :src="getURL($store.state.produto.id)" :alt="$store.state.produto.nome">
+                <img :src="getURL(produto.id)" :alt="produto.nome">
             </div>
             <div class="modal_dados">
-                <button v-if="$store.state.produto" @click="semProduto" class="modal_fechar">X</button>
-                <span class="nodal_preco">{{numeroPreco($store.state.produto.preco)}}</span>
-                <h2 class="modal_titulo">{{$store.state.produto.nome}}</h2>
-                <p>{{$store.state.produto.descricao}}</p>
-                <button v-if="$store.state.produto.estoque > 0" class="modal_btn" 
+                <button v-if="produto" @click="semProduto" class="modal_fechar">X</button>
+                <span class="nodal_preco">{{numeroPreco(produto.preco)}}</span>
+                <h2 class="modal_titulo">{{produto.nome}}</h2>
+                <p>{{produto.descricao}}</p>
+                <button v-if="produto.estoque > 0" class="modal_btn" 
                     @click="adicionarItem">Adicionar Item</button>
                 <button v-else class="modal_btn esgotado" disabled>Produto Esgotado</button>
             </div>
             <div class="avaliacoes">
                 <h2 class="avaliacoes_subtitulo">Avaliações</h2>
                 <ul>
-                    <li v-for="(avaliacao, index) in $store.state.produto.reviews" class="avaliacao" :key="index">
+                    <li v-for="(avaliacao, index) in produto.reviews" class="avaliacao" :key="index">
                         <p class="avaliacao_descricao">{{avaliacao.descricao}}</p>
                         <p class="avaliacao_usuario">{{avaliacao.nome}} | {{avaliacao.estrelas}} estrelas</p>
                     </li>
@@ -39,6 +38,7 @@ import numeroPreco from "@/api/mixins/numeroPreco.js";
 
 // import * as path from 'path'
 //import axios from "axios"
+import { mapState, mapMutations } from "vuex";
 export default {
     name: "Produtos",
     components: {
@@ -51,14 +51,18 @@ export default {
         }
     },
     mixins: [numeroPreco],
+    computed: {
+        ...mapState(["produto","carrinho", "mensagemAlerta", "alertaAtivo"]),
+    },
     methods: {
+        ...mapMutations(["UPDATE_PRODUTO", "PUSH_CARRINHO", "DECREMENTA_ESTOQUE"]),
         getURL(imageName){
             return require(`@/api/produtos/${imageName}/${imageName}-foto.jpg`)
         },
         fetchProduto() {
             api.get(`/produtos/${this.id}`)
                 .then(r => {
-                    this.$store.state.produto = r.data;
+                    this.UPDATE_PRODUTO(r.data);
                 })
             /*this.produto = dados
             console.log(this.produto, id)
@@ -69,20 +73,25 @@ export default {
         },
         fecharModal({ target, currentTarget }) {
             if (target === currentTarget) {
-                this.$store.state.produto = false
+                this.UPDATE_PRODUTO(false)
                 this.$router.push({ name: "Home" });
+                
             }
                 
 
         },
         semProduto(){
+           document.title = "Techno"
            this.$router.push({ name: "Home" });
         },
-        adicionarItem() {
-            this.$store.state.produto.estoque--;
-            const { id, nome, preco } = this.$store.state.produto;
-            this.$store.state.carrinho.push({ id, nome, preco });
+        adicionarItem(){
+            if (this.produto === false)
+                return
+            this.DECREMENTA_ESTOQUE();
+            const { id, nome, preco } = this.produto;
+            this.PUSH_CARRINHO({ id, nome, preco });
             this.alerta(`${nome} adicionado ao carrinho.`);
+            window.localStorage.carrinho = JSON.stringify(this.carrinho); 
         },
          alerta(mensagem) {
             this.$store.state.mensagemAlerta = mensagem;
@@ -91,9 +100,32 @@ export default {
                 this.$store.state.alertaAtivo = false;
             }, 1500);
         },
+        checarLocalStorage() {
+            if (window.localStorage.carrinho){
+                this.$store.state.carrinho = JSON.parse(window.localStorage.carrinho);
+            }
+        },
+        compararEstoque() {
+            const items = this.carrinho.filter(({ id }) => id === this.produto.id);
+            this.$store.state.produto.estoque -= items.length;
+        },
+    },
+    watch: {
+        produto() {
+            document.title = this.produto.nome || "Techno";
+            const hash = this.produto.id || "";
+            history.pushState(null, null, `${hash}`);
+            if (this.produto) {
+                this.compararEstoque();
+            }
+        },
+        carrinho() {
+            console.log("oicarrinho2")
+            window.localStorage.carrinho = JSON.stringify(this.carrinho); 
+        },
     },
     created() {
-    this.fetchProduto();
+        this.fetchProduto();
   }
 }
 </script>

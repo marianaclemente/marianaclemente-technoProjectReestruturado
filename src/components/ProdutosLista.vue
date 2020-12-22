@@ -17,22 +17,33 @@
 <script>
 import { api } from "@/services.js";
 import numeroPreco from "@/api/mixins/numeroPreco.js";
+import { mapMutations } from "vuex";
 
 // import image from "@/api/produtos/notebook/notebook.jpg"
 export default {
     data() {
         return {
-            image: null,
-            imagee: "notebook",
             produtos: [],
-            baseURL: "http://localhost:3000/",
-            
+            //baseURL: "http://localhost:3000/",   
         }
     },
     mixins: [numeroPreco],
+    computed: {
+
+    },
     methods: {
+        ...mapMutations(["UPDATE_PRODUTO"]),
         getURL(imageName){
             return require(`@/api/produtos/${imageName}/${imageName}.jpg`)
+        },
+        fetchProduto(id) {
+            api.get(`/produtos/${id}`)
+                .then(r => {
+                    this.UPDATE_PRODUTO(r.data);
+                })
+                .catch(function (error) {
+                    console.log('request failed', error)
+                })
         },
         fetchProdutos() {
             //this.produtos = dados
@@ -56,13 +67,13 @@ export default {
             }
         }
     },
-     watch: {
-    url() {
-      this.fetchProdutos();
-    }
-  },
-  created() {
-    this.fetchProdutos();
+    watch: {
+        url() {
+            this.fetchProdutos();
+        }
+    },
+    created() {
+        this.fetchProdutos();
     // api.get(`/produtos/${this.image}`)
     //     .then(r => {
     //        this.image = r.data.img

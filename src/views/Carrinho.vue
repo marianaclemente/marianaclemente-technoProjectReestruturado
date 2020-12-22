@@ -21,7 +21,7 @@
 <script>
 // import * as path from 'path'
 //import axios from "axios"
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import numeroPreco from "@/api/mixins/numeroPreco.js";
 
 export default {
@@ -42,7 +42,7 @@ export default {
             if (this.carrinho.length) {
                 this.carrinho.forEach(item => {
                     total += item.preco; 
-                    this.totalCarrinho = total;
+                    this.$store.state.totalCarrinho = total;
     
                 })
             }
@@ -51,50 +51,19 @@ export default {
     },
     mixins: [numeroPreco],
     methods: {
+        ...mapMutations(["CHANGE_CARRINHO_ATIVO", "REMOVE_CARRINHO"]),
         clickForaCarrinho({ target, currentTarget }) {
-            if (target === currentTarget) this.carrinhoAtivo = false
-        },
-        
+            if (target === currentTarget) this.CHANGE_CARRINHO_ATIVO(false)
+        },  
         removerItem(index) {
-            this.carrinho.splice(index, 1);
-        },
-        checarLocalStorage() {
-            if (window.localStorage.carrinho)
-                this.carrinho = JSON.parse(window.localStorage.carrinho);
+            this.REMOVE_CARRINHO(index)
+            window.localStorage.carrinho = JSON.stringify(this.carrinho); 
         },
         compararEstoque() {
             const items = this.carrinho.filter(({ id }) => id === this.produto.id);
-            console.log("item");
-            this.carrinho.filter( item => {
-                
-                console.log(item);
-            })
-
-            this.produto.estoque -= items.length;
+            this.$store.state.produto.estoque -= items.length;
         },
-       
-       
-    },
-
-    watch: {
-        produto() {
-            document.title = this.produto.nome || "Techno";
-            const hash = this.produto.id || "";
-            history.pushState(null, null, `#${hash}`);
-            console.log("item3");
-            if (this.produto) {
-                console.log("item2");
-                this.compararEstoque();
-            }
-        },
-        carrinho() {
-            window.localStorage.carrinho = JSON.stringify(this.carrinho);
-        }
-    },
-    created() {
-        this.checarLocalStorage();
     }
-    
 }
 </script>
 

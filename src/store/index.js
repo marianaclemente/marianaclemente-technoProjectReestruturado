@@ -14,6 +14,18 @@ export default createStore({
     CHANGE_CARRINHO_ATIVO(state, payload){
       state.carrinhoAtivo = payload
     },
+    UPDATE_PRODUTO(state, payload){
+      state.produto = payload
+    },
+    REMOVE_CARRINHO(state, index){
+      state.carrinho.splice(index, 1);
+    },
+    PUSH_CARRINHO(state, payload){
+      state.carrinho.push(payload);
+    },
+    DECREMENTA_ESTOQUE(state){
+      state.produto.estoque--;
+    },
     updateProduto(state){
         console.log("item3")
         document.title = state.produto.nome || "Techno";

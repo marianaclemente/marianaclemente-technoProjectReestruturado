@@ -24,7 +24,7 @@ export default {
             if (this.carrinho.length) {
                 this.carrinho.forEach(item => {
                     total += item.preco; 
-                    this.totalCarrinho = total;
+                    this.$store.state.totalCarrinho = total;
     
                 })
             }
