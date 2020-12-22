@@ -7,7 +7,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-
+import numeroPreco from "@/api/mixins/numeroPreco.js";
 export default {
     
     data() {
@@ -16,6 +16,7 @@ export default {
         }
         
     },
+    mixins: [numeroPreco],
     computed: {
         ...mapState(["carrinho", "totalCarrinho"]),
         carrinhoTotal() {
@@ -32,9 +33,6 @@ export default {
     },
     methods: {
         ...mapMutations(["CHANGE_CARRINHO_ATIVO"]),
-        numeroPreco(valor) {
-            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        }
     }
 }
 </script>

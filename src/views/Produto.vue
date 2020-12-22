@@ -35,6 +35,8 @@
 <script>
 import { api } from "@/services.js";
 import Alerta from "@/views/Alerta.vue";
+import numeroPreco from "@/api/mixins/numeroPreco.js";
+
 // import * as path from 'path'
 //import axios from "axios"
 export default {
@@ -48,10 +50,8 @@ export default {
             //produto: [],
         }
     },
+    mixins: [numeroPreco],
     methods: {
-        numeroPreco(valor) {
-            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        },
         getURL(imageName){
             return require(`@/api/produtos/${imageName}/${imageName}-foto.jpg`)
         },

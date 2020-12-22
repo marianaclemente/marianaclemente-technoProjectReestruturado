@@ -22,6 +22,8 @@
 // import * as path from 'path'
 //import axios from "axios"
 import { mapState } from "vuex";
+import numeroPreco from "@/api/mixins/numeroPreco.js";
+
 export default {
     name: "Carrinho",
     props: ["id"],
@@ -47,10 +49,8 @@ export default {
             return total;
         }
     },
+    mixins: [numeroPreco],
     methods: {
-        numeroPreco(valor) {
-            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        },
         clickForaCarrinho({ target, currentTarget }) {
             if (target === currentTarget) this.carrinhoAtivo = false
         },

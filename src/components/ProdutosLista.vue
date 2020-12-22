@@ -16,6 +16,7 @@
 
 <script>
 import { api } from "@/services.js";
+import numeroPreco from "@/api/mixins/numeroPreco.js";
 
 // import image from "@/api/produtos/notebook/notebook.jpg"
 export default {
@@ -28,10 +29,8 @@ export default {
             
         }
     },
+    mixins: [numeroPreco],
     methods: {
-        numeroPreco(valor) {
-            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        },
         getURL(imageName){
             return require(`@/api/produtos/${imageName}/${imageName}.jpg`)
         },

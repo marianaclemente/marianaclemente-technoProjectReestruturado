@@ -15,11 +15,6 @@ import TheHeader from "@/components/TheHeader.vue"
 import ProdutosLista from "@/components/ProdutosLista.vue"
 
 export default {
-  methods:{
-    numeroPreco(valor) {
-            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        }
-  },
   components: {
     TheHeader,
     ProdutosLista,
