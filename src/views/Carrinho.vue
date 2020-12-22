@@ -7,11 +7,11 @@
                 <ul class="carrinho_lista">
                     <li v-for="(item, index) in $store.state.carrinho" class="carrinho_item" :key="index">
                         <p>{{item.nome}}</p>
-                        <p class="carrinho_preco">{{item.preco }}</p>
+                        <p class="carrinho_preco">{{numeroPreco(item.preco)}}</p>
                         <button class="carrinho_remover" @click="removerItem(index)">X</button>
                     </li>
                 </ul>
-                <p class="carrinho_total">{{carrinhoTotal}}</p>
+                <p class="carrinho_total">{{numeroPreco(carrinhoTotal)}}</p>
                 <button class="carrinho_finalizar">Finalizar Compra</button>
             </div>
         </div>
@@ -21,6 +21,7 @@
 <script>
 // import * as path from 'path'
 //import axios from "axios"
+import { mapState } from "vuex";
 export default {
     name: "Carrinho",
     props: ["id"],
@@ -30,12 +31,16 @@ export default {
         }
     },
     computed: {
+        ...mapState(["produto", "carrinho", "totalCarrinho", "carrinhoAtivo"]),
+        produto(){
+            return this.produto;
+        },
         carrinhoTotal() {
             let total = 0;
-            if (this.$store.state.carrinho.length) {
-                this.$store.state.carrinho.forEach(item => {
+            if (this.carrinho.length) {
+                this.carrinho.forEach(item => {
                     total += item.preco; 
-                    this.$store.state.totalCarrinho = total;
+                    this.totalCarrinho = total;
     
                 })
             }
@@ -43,20 +48,29 @@ export default {
         }
     },
     methods: {
+        numeroPreco(valor) {
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        },
         clickForaCarrinho({ target, currentTarget }) {
-            if (target === currentTarget) this.$store.state.carrinhoAtivo = false
+            if (target === currentTarget) this.carrinhoAtivo = false
         },
         
         removerItem(index) {
-            this.$store.state.carrinho.splice(index, 1);
+            this.carrinho.splice(index, 1);
         },
         checarLocalStorage() {
             if (window.localStorage.carrinho)
-                this.$store.state.carrinho = JSON.parse(window.localStorage.carrinho);
+                this.carrinho = JSON.parse(window.localStorage.carrinho);
         },
         compararEstoque() {
-            const items = this.$store.state.carrinho.filter(({ id }) => id === this.$store.state.produto.id);
-            this.$store.state.produto.estoque -= items.length;
+            const items = this.carrinho.filter(({ id }) => id === this.produto.id);
+            console.log("item");
+            this.carrinho.filter( item => {
+                
+                console.log(item);
+            })
+
+            this.produto.estoque -= items.length;
         },
        
        
@@ -64,15 +78,17 @@ export default {
 
     watch: {
         produto() {
-            document.title = this.$store.state.produto.nome || "Techno";
-            const hash = this.$store.state.produto.id || "";
+            document.title = this.produto.nome || "Techno";
+            const hash = this.produto.id || "";
             history.pushState(null, null, `#${hash}`);
-            if (this.$store.state.produto) {
+            console.log("item3");
+            if (this.produto) {
+                console.log("item2");
                 this.compararEstoque();
             }
         },
         carrinho() {
-            window.localStorage.carrinho = JSON.stringify(this.$store.state.carrinho);
+            window.localStorage.carrinho = JSON.stringify(this.carrinho);
         }
     },
     created() {

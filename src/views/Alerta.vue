@@ -24,7 +24,7 @@ export default {
     position: absolute;
     top: 20px;
     left: 0px;
-    z-index: 10;
+    z-index: 30;
     width: 100%;
     text-align: center;
     display: none;
@@ -32,7 +32,7 @@ export default {
 
 .alerta.ativo {
     display: block;
-    animation: fadeInDown .3s forwards;
+    animation: fadeInDown .10s forwards;
 }
 
 @keyframes fadeInDown {

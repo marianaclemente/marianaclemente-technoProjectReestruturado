@@ -3,9 +3,9 @@
         <div v-for="item in produtos" @click="abrirModal(item.id)" :key="item.id" >
             <router-link :to="{name: 'produto', params: {id: item.id}}" custom v-slot="{ navigate }">
             <div role="link" @click="navigate" class="produto">
-                <img :src="image" :alt="item.nome" class="produto_img"/>
+                <img :src="getURL(item.id)" :alt="item.nome" class="produto_img"/>
                 <div class="produto_info">
-                    <span class="produto_preco">{{item.preco}}</span>
+                    <span class="produto_preco">{{numeroPreco(item.preco)}}</span>
                     <h2 class="produto_titulo">{{item.nome}}</h2>
                 </div>
             </div>
@@ -16,17 +16,25 @@
 
 <script>
 import { api } from "@/services.js";
-import image from "@/api/produtos/notebook/notebook.jpg"
+
+// import image from "@/api/produtos/notebook/notebook.jpg"
 export default {
     data() {
         return {
-            image: image,
+            image: null,
+            imagee: "notebook",
             produtos: [],
             baseURL: "http://localhost:3000/",
             
         }
     },
     methods: {
+        numeroPreco(valor) {
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        },
+        getURL(imageName){
+            return require(`@/api/produtos/${imageName}/${imageName}.jpg`)
+        },
         fetchProdutos() {
             //this.produtos = dados
             api.get("/produtos")
@@ -44,7 +52,6 @@ export default {
         
         router() {
             const hash = document.location.hash;
-            console()
             if (hash) {
                 this.fetchProduto(hash.replace("#", ""));
             }
@@ -57,6 +64,11 @@ export default {
   },
   created() {
     this.fetchProdutos();
+    // api.get(`/produtos/${this.image}`)
+    //     .then(r => {
+    //        this.image = r.data.img
+    //     })
+    
   }
 }
 </script>

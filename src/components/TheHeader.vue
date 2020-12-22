@@ -1,11 +1,12 @@
 <template>
     <header class="header">
         <img class="logo" src="@/assets/techno.svg" alt="TechnoProject">
-        <div class="carrinho_menu" @click="$store.state.carrinhoAtivo = true">{{carrinhoTotal}} | {{$store.state.carrinho.length}}</div>
+        <div class="carrinho_menu" @click="CHANGE_CARRINHO_ATIVO(true)">{{numeroPreco(carrinhoTotal)}} | {{carrinho.length}}</div>
     </header>
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 
 export default {
     
@@ -16,16 +17,23 @@ export default {
         
     },
     computed: {
+        ...mapState(["carrinho", "totalCarrinho"]),
         carrinhoTotal() {
             let total = 0;
-            if (this.$store.state.carrinho.length) {
-                this.$store.state.carrinho.forEach(item => {
+            if (this.carrinho.length) {
+                this.carrinho.forEach(item => {
                     total += item.preco; 
-                    this.$store.state.totalCarrinho = total;
+                    this.totalCarrinho = total;
     
                 })
             }
             return total;
+        }
+    },
+    methods: {
+        ...mapMutations(["CHANGE_CARRINHO_ATIVO"]),
+        numeroPreco(valor) {
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
         }
     }
 }

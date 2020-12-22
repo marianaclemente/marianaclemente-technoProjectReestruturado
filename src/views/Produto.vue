@@ -1,12 +1,14 @@
 <template>
+    
     <section class="modal" v-if="$store.state.produto" @click="fecharModal">
+        <!-- <Alerta v-if= "$store.state.alertaAtivo" /> -->
         <div class="modal_container">
             <div class="modal_img">
-                <img :src="$store.state.produto.img" :alt="$store.state.produto.nome">
+                <img :src="getURL($store.state.produto.id)" :alt="$store.state.produto.nome">
             </div>
             <div class="modal_dados">
                 <button v-if="$store.state.produto" @click="semProduto" class="modal_fechar">X</button>
-                <span class="nodal_preco">{{$store.state.produto.preco}}</span>
+                <span class="nodal_preco">{{numeroPreco($store.state.produto.preco)}}</span>
                 <h2 class="modal_titulo">{{$store.state.produto.nome}}</h2>
                 <p>{{$store.state.produto.descricao}}</p>
                 <button v-if="$store.state.produto.estoque > 0" class="modal_btn" 
@@ -24,14 +26,22 @@
             </div>
         </div>
     </section>
+    <section>
+        <Alerta v-if= "$store.state.alertaAtivo" />
+    </section>
+    
 </template>
 
 <script>
 import { api } from "@/services.js";
+import Alerta from "@/views/Alerta.vue";
 // import * as path from 'path'
 //import axios from "axios"
 export default {
     name: "Produtos",
+    components: {
+        Alerta
+    },
     props: ["id"],
     data() {
         return {
@@ -39,6 +49,12 @@ export default {
         }
     },
     methods: {
+        numeroPreco(valor) {
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        },
+        getURL(imageName){
+            return require(`@/api/produtos/${imageName}/${imageName}-foto.jpg`)
+        },
         fetchProduto() {
             api.get(`/produtos/${this.id}`)
                 .then(r => {
@@ -64,7 +80,6 @@ export default {
         },
         adicionarItem() {
             this.$store.state.produto.estoque--;
-            console.log(this.$store.state.produto.estoque--)
             const { id, nome, preco } = this.$store.state.produto;
             this.$store.state.carrinho.push({ id, nome, preco });
             this.alerta(`${nome} adicionado ao carrinho.`);
@@ -85,7 +100,6 @@ export default {
 
 <style scoped>
     /* MODAL */
-
 .modal::before{
     content: "";
     position: fixed;

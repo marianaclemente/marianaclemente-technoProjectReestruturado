@@ -3,8 +3,6 @@
   <body> 
     <div id="app">
       <TheHeader/>
-      <!-- <Home/> -->
-      <!-- <Carrinho v-if="true"/> -->
       <router-view/>
       <ProdutosLista/>
       
@@ -15,18 +13,17 @@
 <script>
 import TheHeader from "@/components/TheHeader.vue"
 import ProdutosLista from "@/components/ProdutosLista.vue"
-// import Carrinho from "@/views/Carrinho.vue";
-
-
-// import Home from "@/views/Home.vue"
-
 
 export default {
+  methods:{
+    numeroPreco(valor) {
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+  },
   components: {
     TheHeader,
     ProdutosLista,
-    // Carrinho
-    // Home
+
   }
 }
 </script>
