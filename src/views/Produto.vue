@@ -112,6 +112,7 @@ export default {
     },
     watch: {
         produto() {
+            console.log("produto")
             document.title = this.produto.nome || "Techno";
             const hash = this.produto.id || "";
             history.pushState(null, null, `${hash}`);
