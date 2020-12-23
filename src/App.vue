@@ -18,7 +18,6 @@ import { mapState } from "vuex";
 
 export default {
   created(){
-    document.title = "Techno"
     this.checarLocalStorage();
     //window.localStorage.carrinho = JSON.stringify(this.$store.state.carrinho); 
   },
