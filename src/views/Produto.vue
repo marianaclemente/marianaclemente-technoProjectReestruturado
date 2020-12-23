@@ -112,7 +112,6 @@ export default {
     },
     watch: {
         produto() {
-            console.log("produto")
             document.title = this.produto.nome || "Techno";
             const hash = this.produto.id || "";
             history.pushState(null, null, `${hash}`);
@@ -121,7 +120,6 @@ export default {
             }
         },
         carrinho() {
-            console.log("oicarrinho2")
             window.localStorage.carrinho = JSON.stringify(this.carrinho); 
         },
     },
@@ -251,4 +249,34 @@ export default {
     font-weight: bold;
 }
 
+/* RESPONSIVO */
+
+@media screen and (max-width: 900px) {
+    .modal {
+        padding: 10px;
+    }
+    .modal_container {
+        grid-gap: 20px;
+        background: #ffffff ;
+        padding: 10px 0;
+    }
+    .modal_img {
+        grid-row: 2;
+    }
+    .modal_img img {
+        width: 100%;
+        max-width: initial;
+    }
+    .modal_dados {
+        grid-column: 1;
+        padding: 10px;
+    }
+    .modal_btn {
+        margin-top: 20px;
+    }
+    .avaliacoes {
+        grid-column: 1;
+        padding: 10px;
+    }
+}
 </style>

@@ -160,4 +160,11 @@ export default {
     font-family: "Noto Serif";
 }
 
+/* RESPONSIVO */
+
+@media screen and (max-width: 900px) {
+    .carrinho_modal {
+        padding: 10px;
+    }
+}
 </style>

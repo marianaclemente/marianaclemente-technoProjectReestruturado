@@ -77,4 +77,12 @@ body {
     transform: translate3d(0px, 0, 0);
   }
 }
+
+/* RESPONSIVO */
+
+@media screen and (max-width: 900px) {
+    #app {
+        padding: 0 10px;
+    }
+}
 </style>

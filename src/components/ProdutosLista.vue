@@ -113,4 +113,26 @@ export default {
     color: rgba(0, 0, 0, .5);
 }
 
+/* RESPONSIVO */
+
+@media screen and (max-width: 900px) {
+    .produtos {
+        margin-top: 40px;
+    }
+    .produto {
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: 300px;
+        margin: 30px auto;
+    }
+    .produto_info {
+        padding: 20px;
+    }
+    .produto_img {
+        max-width: 100%;
+    }
+    .produto_titulo {
+        font-size: 1.5rem;
+    }
+}
 </style>
